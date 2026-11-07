@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123d32">
+  <title>Paiement | Badminton Club de Jodoigne</title>
+  <style>
+    :root {
+      --green: #123d32;
+      --green2: #1d604d;
+      --lime: #d8f36a;
+      --ink: #17231f;
+      --muted: #64736d;
+      --paper: #f4f7f3;
+      --white: #fff;
+      --line: #e1e9e3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 28px 16px;
+      background: radial-gradient(circle at 15% 5%, #e6f0dc 0, transparent 32%), var(--paper);
+      color: var(--ink); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .wrap { width: 100%; max-width: 540px; margin: 0 auto; }
+    .card {
+      background: var(--white); border: 1px solid var(--line); border-radius: 24px;
+      overflow: hidden; box-shadow: 0 18px 55px rgba(18,61,50,.09);
+    }
+    header {
+      background: var(--green); color: white; padding: 30px 26px 27px;
+      position: relative; overflow: hidden;
+    }
+    header:after {
+      content: ""; position: absolute; width: 190px; height: 190px; border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%; right: -62px; top: -90px; box-shadow: 0 0 0 22px rgba(255,255,255,.04), 0 0 0 46px rgba(255,255,255,.03);
+    }
+    .topline { display:flex; align-items:center; gap:12px; position:relative; z-index:1; }
+    .mark {
+      width:48px; height:48px; border-radius:15px; background:var(--lime); color:var(--green);
+      display:grid; place-items:center; font-size:25px; flex:0 0 auto;
+    }
+    .eyebrow { color:#c8ddcf; text-transform:uppercase; letter-spacing:.13em; font-size:10px; font-weight:800; }
+    h1 { font-size:clamp(22px, 5vw, 29px); line-height:1.12; margin:5px 0 0; letter-spacing:-.04em; }
+    .intro { color:#e1eee5; line-height:1.55; margin:23px 0 0; max-width:390px; position:relative; z-index:1; font-size:14px; }
+    main { padding:25px 26px 28px; }
+    .beneficiary { background:#f5f8f5; border:1px solid var(--line); border-radius:15px; padding:15px 16px; }
+    .label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.09em; font-weight:800; }
+    .name { font-size:14px; font-weight:800; margin-top:6px; }
+    .iban { font-size:14px; letter-spacing:.06em; margin-top:5px; color:#3b5148; font-variant-numeric:tabular-nums; }
+    .field { margin-top:20px; }
+    label { display:block; font-size:13px; font-weight:750; margin-bottom:8px; }
+    .inputwrap { display:flex; align-items:center; border:1px solid #cfdad2; border-radius:12px; overflow:hidden; background:white; }
+    input {
+      width:100%; min-width:0; border:0; outline:0; padding:14px 13px; font:inherit; font-size:16px; color:var(--ink);
+    }
+    .suffix { padding:0 14px; color:var(--muted); font-weight:700; font-size:13px; }
+    .hint { color:var(--muted); font-size:11px; margin:7px 1px 0; }
+    button {
+      width:100%; border:0; border-radius:13px; margin-top:21px; padding:15px 18px;
+      background:var(--green2); color:white; font:inherit; font-size:15px; font-weight:800;
+      cursor:pointer; transition:transform .15s, background .15s;
+    }
+    button:hover { background:var(--green); transform:translateY(-1px); }
+    button:focus-visible, input:focus-visible { outline:3px solid var(--lime); outline-offset:2px; }
+    #error { color:#a52c2c; font-size:12px; margin:10px 2px 0; display:none; }
+    #payment { display:none; margin-top:25px; padding-top:23px; border-top:1px solid var(--line); text-align:center; }
+    #payment h2 { font-size:18px; margin:0 0 7px; }
+    #payment p { color:var(--muted); font-size:13px; line-height:1.5; margin:0 auto 15px; max-width:360px; }
+    #qrcode { display:inline-flex; padding:13px; border:1px solid var(--line); border-radius:17px; background:white; min-width:230px; min-height:230px; align-items:center; justify-content:center; }
+    #qrcode img, #qrcode canvas { max-width:100%; height:auto !important; }
+    .warning { background:#f6f8f5; border-radius:12px; padding:12px 13px; margin-top:16px; color:#53645b; font-size:11px; line-height:1.5; text-align:left; }
+    footer { text-align:center; color:#78877f; font-size:11px; padding:17px 10px 2px; }
+    @media (max-width:420px) { body{padding:14px 10px} header{padding:25px 21px} main{padding:21px} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <div class="topline">
+          <div class="mark" aria-hidden="true">🏸</div>
+          <div>
+            <div class="eyebrow">Club de badminton</div>
+            <h1>Badminton Club<br>de Jodoigne</h1>
+          </div>
+        </div>
+        <p class="intro">Merci pour votre soutien ! Encodez éventuellement un montant et une communication, puis générez votre QR code de paiement.</p>
+      </header>
+      <main>
+        <section class="beneficiary" aria-label="Coordonnées bancaires">
+          <div class="label">Bénéficiaire</div>
+          <div class="name">BADMINTON CLUB DE JODOIGNE</div>
+          <div class="iban">BE73 0682 5123 3360</div>
+        </section>
+
+        <div class="field">
+          <label for="amount">Montant (facultatif)</label>
+          <div class="inputwrap">
+            <input id="amount" type="text" inputmode="decimal" placeholder="Ex. 25,00" autocomplete="off">
+            <span class="suffix">EUR</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="communication">Communication (facultative)</label>
+          <div class="inputwrap">
+            <input id="communication" type="text" maxlength="140" placeholder="Ex. Cotisation – Nom Prénom" autocomplete="off">
+          </div>
+        </div>
+        <button id="generate" type="button">🏸 Générer mon QR code de paiement</button>
+        <div id="error" role="alert"></div>
+
+        <section id="payment" aria-live="polite">
+          <h2>Scannez pour payer</h2>
+          <p>Ouvrez votre application bancaire et scannez le QR code pour préparer le virement.</p>
+          <div id="qrcode"></div>
+          <div class="warning">Vérifiez toujours le bénéficiaire, l'IBAN et le montant dans votre application bancaire avant de confirmer le paiement.</div>
+        </section>
+      </main>
+    </div>
+    <footer>Badminton Club de Jodoigne</footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    const amountInput = document.getElementById('amount');
+    const communicationInput = document.getElementById('communication');
+    const errorBox = document.getElementById('error');
+    const paymentSection = document.getElementById('payment');
+    const qrContainer = document.getElementById('qrcode');
+
+    function makeEpcPayload(amount, communication) {
+      // EPC/SEPA Credit Transfer QR (EPC069-12)
+      return [
+        'BCD', '002', '1', 'SCT', '',
+        'BADMINTON CLUB DE JODOIGNE',
+        'BE73068251233360',
+        amount ? 'EUR' + amount : '',
+        '', '', communication
+      ].join('\n');
+    }
+
+    document.getElementById('generate').addEventListener('click', () => {
+      errorBox.style.display = 'none';
+      const rawAmount = amountInput.value.trim().replace(',', '.');
+      let amount = '';
+
+      if (rawAmount) {
+        if (!/^\d+(\.\d{1,2})?$/.test(rawAmount)) {
+          errorBox.textContent = 'Veuillez saisir un montant valide (ex. 25,00).';
+          errorBox.style.display = 'block';
+          return;
+        }
+        const value = Number(rawAmount);
+        if (!Number.isFinite(value) || value <= 0 || value > 999999.99) {
+          errorBox.textContent = 'Le montant doit être supérieur à 0 et ne peut pas dépasser 999 999,99 EUR.';
+          errorBox.style.display = 'block';
+          return;
+        }
+        amount = value.toFixed(2);
+      }
+
+      const communication = communicationInput.value.trim();
+      if (communication.length > 140) {
+        errorBox.textContent = 'La communication est trop longue.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      if (typeof QRCode === 'undefined') {
+        errorBox.textContent = 'La bibliothèque QR code n’a pas pu être chargée. Vérifiez votre connexion internet et réessayez.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      qrContainer.innerHTML = '';
+      new QRCode(qrContainer, {
+        text: makeEpcPayload(amount, communication),
+        width: 220, height: 220,
+        colorDark: '#123d32', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      paymentSection.style.display = 'block';
+      paymentSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  </script>
+</body>
+</html>
